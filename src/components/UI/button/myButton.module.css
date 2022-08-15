@@ -1,0 +1,13 @@
+.myButton {
+    padding: 5px 10px;
+    color: black;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-top: 10px;
+    background: white;
+}
+
+.myButton:hover {
+    color: white;
+    background: black;
+}

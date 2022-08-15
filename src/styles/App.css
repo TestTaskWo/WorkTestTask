@@ -1,0 +1,42 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+#root {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.App {
+	width: 960px;
+}
+
+.post {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 15px;
+	margin-top: 25px;
+	border: 2px solid teal;
+}
+
+.post-enter {
+	opacity: 0;
+}
+
+.post-enter-active {
+	opacity: 1;
+	transition: opacity 500ms ease-in;
+}
+
+.post-exit {
+	opacity: 1;
+}
+
+.post-exit-active {
+	opacity: 0;
+	transition: opacity 500ms ease-in;
+}

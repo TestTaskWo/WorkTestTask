@@ -18,7 +18,7 @@ const PostList = ({ posts, title, deletePost }) => {
 							title={post.title}
 							body={post.body}
 							id={post.id}
-							index={index + 1}
+							index={post.id}
 							deletePost={deletePost}
 						/>
 					</CSSTransition>

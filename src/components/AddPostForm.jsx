@@ -1,32 +1,49 @@
-import React, { useState } from "react";
-import MyButton from "./UI/button/myButton";
+import MyButton from "./UI/button/MyButton";
 import MyInput from "./UI/input/myInput";
+import { useFormik } from "formik";
+import { useDispatch } from "react-redux";
+import { addPost } from "../store/reducers/PostsSlice";
 
-const AddPostForm = ({ create }) => {
-	const [post, setPost] = useState({ title: "", body: "" });
-	const addNewPost = (e) => {
-		e.preventDefault();
-		create(post);
-		setPost({ title: "", body: "" });
-	};
+const AddPostForm = () => {
+  const dispatch = useDispatch();
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      body: "",
+    },
+    onSubmit: (values) => {
+      dispatch(addPost(values));
+      values.title = '';
+      values.body = '';
+    },
+  });
 
-	return (
-		<form>
-			<MyInput
-				value={post.title}
-				onChange={(e) => setPost({ ...post, title: e.target.value })}
-				type={"text"}
-				placeholder={"Название поста"}
-			/>
-			<MyInput
-				value={post.content}
-				onChange={(e) => setPost({ ...post, body: e.target.value })}
-				type={"text"}
-				placeholder={"Описание поста"}
-			/>
-			<MyButton disabled={false} title={"Добавить пост"} onClick={addNewPost} />
-		</form>
-	);
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        formik.handleSubmit();
+      }}
+    >
+      <MyInput
+        id="title"
+        name="title"
+        value={formik.values.title}
+        onChange={formik.handleChange}
+        type={"text"}
+        placeholder={"Название поста"}
+      />
+      <MyInput
+        id="body"
+        name="body"
+        value={formik.values.body}
+        onChange={formik.handleChange}
+        type={"text"}
+        placeholder={"Описание поста"}
+      />
+      <MyButton disabled={false} title={"Добавить пост"} type={"submit"} />
+    </form>
+  );
 };
 
 export default AddPostForm;

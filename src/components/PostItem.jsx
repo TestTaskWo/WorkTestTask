@@ -1,8 +1,11 @@
 import React from "react";
-import MyButton from "./UI/button/myButton";
+import MyButton from "./UI/button/MyButton";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deletePost } from "../store/reducers/PostsSlice";
 
-const PostItem = ({ title, body, id, index, deletePost }) => {
+const PostItem = ({ title, body, id, index }) => {
+  const dispatch = useDispatch();
   const router = useNavigate();
   return (
     <div className="post">
@@ -17,7 +20,7 @@ const PostItem = ({ title, body, id, index, deletePost }) => {
           title={"Открыть"}
         />
         <MyButton
-          onClick={() => deletePost(id)}
+          onClick={() => dispatch(deletePost(id))}
           className="delete"
           title={"Удалить"}
         />

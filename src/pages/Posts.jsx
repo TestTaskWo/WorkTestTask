@@ -3,67 +3,46 @@ import PostList from "../components/PostList";
 import AddPostForm from "../components/AddPostForm";
 import PostFilter from "../components/PostFilter";
 import MyModal from "../components/UI/modal/MyModal";
-import MyButton from "../components/UI/button/myButton";
+import MyButton from "../components/UI/button/MyButton";
 import { usePosts } from "../hooks/usePost";
-import { PostService } from "../api/postService";
 import Loader from "../components/UI/loader/Loader";
-import { useFetching } from "../hooks/useFetcing";
+import postFetching from "../store/creators/PostFetching";
 import { usePagination } from "../hooks/usePagination";
 import Pagination from "../components/UI/pagination/Pagination";
+import { useSelector, useDispatch } from "react-redux";
 
 const Posts = () => {
-  const [posts, setPosts] = useState([]);
-  const [filter, setFilter] = useState({ query: "", sort: "" });
+  const dispatch = useDispatch();
+  const { posts, isLoading, error, totalCount, limit, filterOptions } =
+    useSelector((state) => state.postsSlice);
   const [visible, setVisible] = useState(false);
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
-  const [fetchPosts, isPostLoading, PostError] = useFetching(async () => {
-    const response = await PostService.getAll(limit, page);
-    setPosts(response.data);
-    setTotalCount(response.headers["x-total-count"]);
-  });
-  const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+  const sortedAndSearchedPosts = usePosts(
+    posts,
+    filterOptions.sort,
+    filterOptions.query
+  );
   const [paginationArray] = usePagination(totalCount, limit);
 
-  const addPost = (newPost) => {
-    setPosts([...posts, { ...newPost, id: Date.now() }]);
-    setVisible(false);
-  };
-  const deletePost = (id) => {
-    setPosts(posts.filter((post) => post.id !== id));
-  };
-  const changePostsPage = (page) => {
-    setPage(page);
-  };
   useEffect(() => {
-    fetchPosts();
-  }, [page]);
+    postFetching(dispatch);
+  }, []);
 
   return (
     <div className="App">
-      <PostFilter filter={filter} setFilter={setFilter} />
+      <PostFilter />
       <MyButton onClick={() => setVisible(true)} title={"Добавить пост"} />
       <MyModal visible={visible} setVisible={setVisible}>
-        <AddPostForm create={addPost} />
+        <AddPostForm />
       </MyModal>
-      {PostError && <h1> Произошла ошибка {PostError}</h1>}
-      {isPostLoading ? (
+      {error && <h1> Произошла ошибка {error}</h1>}
+      {isLoading ? (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Loader />
         </div>
       ) : (
-        <PostList
-          posts={sortedAndSearchedPosts}
-          title={"Список новостей"}
-          deletePost={deletePost}
-        />
+        <PostList posts={sortedAndSearchedPosts} title={"Список новостей"} />
       )}
-      <Pagination
-        paginationArray={paginationArray}
-        page={page}
-        callback={changePostsPage}
-      />
+      <Pagination paginationArray={paginationArray} />
     </div>
   );
 };

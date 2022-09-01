@@ -1,6 +1,5 @@
 import PostDetails from "../components/PostDetails";
-import PostComments from "../components/PostComments";
-import MyButton from "../components/UI/button/myButton";
+import MyButton from "../components/UI/button/MyButton";
 import { useNavigate } from "react-router-dom";
 
 const PostPage = () => {
@@ -8,7 +7,6 @@ const PostPage = () => {
   return (
     <div>
       <PostDetails />
-      <PostComments />
       <MyButton title={"Назад"} className="back" onClick={() => router(-1)} />
     </div>
   );
